@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporting & Analytics Dashboard</title>
+    <meta name="description" content="Comprehensive analytics dashboard for insurance and health management reporting">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18"></path>
+                        <path d="M18 17V9"></path>
+                        <path d="M13 17V5"></path>
+                        <path d="M8 17v-3"></path>
+                    </svg>
+                </div>
+                <h1>Analytics Dashboard</h1>
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-link active">Overview</a>
+                <a href="#" class="nav-link">Reports</a>
+                <a href="#" class="nav-link">Members</a>
+                <a href="#" class="nav-link">Claims</a>
+            </nav>
+            <div class="header-actions">
+                <div class="date-display">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span id="currentDate">December 2024</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- KPI Cards Row -->
+        <section class="kpi-section">
+            <div class="kpi-card">
+                <div class="kpi-icon members">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Total Members</span>
+                    <span class="kpi-value" data-target="24856">0</span>
+                    <span class="kpi-change positive">+12.5% from last month</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon premium">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Premium Collected</span>
+                    <span class="kpi-value" data-target="2458000" data-prefix="GH₵">GH₵0</span>
+                    <span class="kpi-change positive">+8.3% from last month</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon claims">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Total Claims</span>
+                    <span class="kpi-value" data-target="3842">0</span>
+                    <span class="kpi-change negative">+5.2% from last month</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon payments">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Provider Payments</span>
+                    <span class="kpi-value" data-target="1875000" data-prefix="GH₵">GH₵0</span>
+                    <span class="kpi-change positive">+6.7% from last month</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Member Demographics Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Member Demographics</h2>
+                <div class="section-actions">
+                    <button class="btn-secondary">Export</button>
+                </div>
+            </div>
+            <div class="grid-3">
+                <!-- Member Status Card -->
+                <div class="card">
+                    <h3>Member Status Distribution</h3>
+                    <div class="status-grid">
+                        <div class="status-item active-status">
+                            <span class="status-dot"></span>
+                            <div class="status-info">
+                                <span class="status-label">Active</span>
+                                <span class="status-value">18,542</span>
+                            </div>
+                            <span class="status-percent">74.6%</span>
+                        </div>
+                        <div class="status-item inactive-status">
+                            <span class="status-dot"></span>
+                            <div class="status-info">
+                                <span class="status-label">Inactive</span>
+                                <span class="status-value">3,214</span>
+                            </div>
+                            <span class="status-percent">12.9%</span>
+                        </div>
+                        <div class="status-item suspended-status">
+                            <span class="status-dot"></span>
+                            <div class="status-info">
+                                <span class="status-label">Suspended</span>
+                                <span class="status-value">1,856</span>
+                            </div>
+                            <span class="status-percent">7.5%</span>
+                        </div>
+                        <div class="status-item deceased-status">
+                            <span class="status-dot"></span>
+                            <div class="status-info">
+                                <span class="status-label">Deceased</span>
+                                <span class="status-value">524</span>
+                            </div>
+                            <span class="status-percent">2.1%</span>
+                        </div>
+                        <div class="status-item retired-status">
+                            <span class="status-dot"></span>
+                            <div class="status-info">
+                                <span class="status-label">Retired</span>
+                                <span class="status-value">720</span>
+                            </div>
+                            <span class="status-percent">2.9%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gender Distribution -->
+                <div class="card">
+                    <h3>Gender Distribution</h3>
+                    <div class="donut-chart-container">
+                        <canvas id="genderChart" width="200" height="200"></canvas>
+                        <div class="donut-center">
+                            <span class="donut-total">24,856</span>
+                            <span class="donut-label">Total</span>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <span class="legend-color male"></span>
+                            <span>Male: 14,125 (56.8%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color female"></span>
+                            <span>Female: 10,731 (43.2%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Principals vs Dependants -->
+                <div class="card">
+                    <h3>Principals vs Dependants</h3>
+                    <div class="donut-chart-container">
+                        <canvas id="memberTypeChart" width="200" height="200"></canvas>
+                        <div class="donut-center">
+                            <span class="donut-total">24,856</span>
+                            <span class="donut-label">Total</span>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <span class="legend-color principal"></span>
+                            <span>Principals: 9,542 (38.4%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color dependant"></span>
+                            <span>Dependants: 15,314 (61.6%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Provider Payments & Premium Collection -->
+        <section class="section">
+            <div class="grid-2">
+                <!-- Provider Payments -->
+                <div class="card">
+                    <h3>Provider Payments</h3>
+                    <div class="payments-grid">
+                        <div class="payment-card paid">
+                            <div class="payment-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="payment-info">
+                                <span class="payment-label">Total Paid</span>
+                                <span class="payment-value">GH₵ 1,875,420</span>
+                            </div>
+                        </div>
+                        <div class="payment-card pending">
+                            <div class="payment-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="payment-info">
+                                <span class="payment-label">Pending Payments</span>
+                                <span class="payment-value">GH₵ 342,580</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="payment-progress">
+                        <div class="progress-header">
+                            <span>Payment Progress</span>
+                            <span>84.5%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="--progress: 84.5%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Funds Collected vs Claims Paid -->
+                <div class="card">
+                    <h3>Funds Collected vs Claims Paid</h3>
+                    <div class="comparison-chart">
+                        <div class="comparison-item">
+                            <div class="comparison-header">
+                                <span class="comparison-label">Premium Collected</span>
+                                <span class="comparison-value">GH₵ 2,458,000</span>
+                            </div>
+                            <div class="comparison-bar collected">
+                                <div class="bar-fill" style="--width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-header">
+                                <span class="comparison-label">Claims Paid</span>
+                                <span class="comparison-value">GH₵ 1,875,420</span>
+                            </div>
+                            <div class="comparison-bar claims-paid">
+                                <div class="bar-fill" style="--width: 76.3%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comparison-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Loss Ratio</span>
+                            <span class="summary-value good">76.3%</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Net Surplus</span>
+                            <span class="summary-value positive">GH₵ 582,580</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Premium Collection by Channel & CAGD -->
+        <section class="section">
+            <div class="grid-2">
+                <!-- Premium by Channel -->
+                <div class="card">
+                    <h3>Premium Collected by Channel</h3>
+                    <div class="channel-list">
+                        <div class="channel-item">
+                            <div class="channel-info">
+                                <div class="channel-icon payroll">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                    </svg>
+                                </div>
+                                <div class="channel-details">
+                                    <span class="channel-name">Payroll Deduction</span>
+                                    <span class="channel-count">8,542 transactions</span>
+                                </div>
+                            </div>
+                            <div class="channel-value">
+                                <span class="amount">GH₵ 1,425,800</span>
+                                <span class="percent">58.0%</span>
+                            </div>
+                        </div>
+                        <div class="channel-item">
+                            <div class="channel-info">
+                                <div class="channel-icon momo">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                    </svg>
+                                </div>
+                                <div class="channel-details">
+                                    <span class="channel-name">Momo Payment</span>
+                                    <span class="channel-count">5,128 transactions</span>
+                                </div>
+                            </div>
+                            <div class="channel-value">
+                                <span class="amount">GH₵ 612,400</span>
+                                <span class="percent">24.9%</span>
+                            </div>
+                        </div>
+                        <div class="channel-item">
+                            <div class="channel-info">
+                                <div class="channel-icon bank">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                                        <path d="M21 12h2"></path>
+                                        <path d="M1 12h2"></path>
+                                        <path d="M4 22h16"></path>
+                                        <path d="M6 12v10"></path>
+                                        <path d="M18 12v10"></path>
+                                        <path d="M12 12v10"></path>
+                                        <path d="M2 12l10-9 10 9"></path>
+                                    </svg>
+                                </div>
+                                <div class="channel-details">
+                                    <span class="channel-name">Bank Transfer</span>
+                                    <span class="channel-count">1,854 transactions</span>
+                                </div>
+                            </div>
+                            <div class="channel-value">
+                                <span class="amount">GH₵ 325,600</span>
+                                <span class="percent">13.2%</span>
+                            </div>
+                        </div>
+                        <div class="channel-item">
+                            <div class="channel-info">
+                                <div class="channel-icon cash">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                        <path d="M1 10h2"></path>
+                                        <path d="M21 10h2"></path>
+                                        <path d="M1 14h2"></path>
+                                        <path d="M21 14h2"></path>
+                                    </svg>
+                                </div>
+                                <div class="channel-details">
+                                    <span class="channel-name">Cash</span>
+                                    <span class="channel-count">642 transactions</span>
+                                </div>
+                            </div>
+                            <div class="channel-value">
+                                <span class="amount">GH₵ 94,200</span>
+                                <span class="percent">3.8%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CAGD Deduction Success Rate -->
+                <div class="card">
+                    <h3>CAGD Deduction Success Rate</h3>
+                    <div class="gauge-container">
+                        <div class="gauge">
+                            <svg viewBox="0 0 200 120" class="gauge-svg">
+                                <path d="M20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="20" stroke-linecap="round"/>
+                                <path d="M20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gaugeGradient)" stroke-width="20" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="37.68" class="gauge-fill"/>
+                                <defs>
+                                    <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#22c55e"/>
+                                        <stop offset="100%" stop-color="#10b981"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="gauge-value">
+                                <span class="gauge-percent">85%</span>
+                                <span class="gauge-label">Success Rate</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deduction-stats">
+                        <div class="deduction-stat success">
+                            <div class="stat-indicator"></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Successful Deductions</span>
+                                <span class="stat-value">7,261</span>
+                            </div>
+                        </div>
+                        <div class="deduction-stat failed">
+                            <div class="stat-indicator"></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Failed Deductions</span>
+                                <span class="stat-value">1,281</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Claims Report Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Claims Report</h2>
+                <div class="section-actions">
+                    <select class="select-filter">
+                        <option>Last 30 Days</option>
+                        <option>Last 90 Days</option>
+                        <option>This Year</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid-3">
+                <!-- Claims by Type -->
+                <div class="card">
+                    <h3>Claims by Type</h3>
+                    <div class="claims-bars">
+                        <div class="claim-bar-item">
+                            <div class="claim-bar-header">
+                                <span class="claim-type">OPD Claims</span>
+                                <span class="claim-count">1,542</span>
+                            </div>
+                            <div class="claim-bar opd">
+                                <div class="claim-bar-fill" style="--width: 40.1%"></div>
+                            </div>
+                            <span class="claim-amount">GH₵ 425,800</span>
+                        </div>
+                        <div class="claim-bar-item">
+                            <div class="claim-bar-header">
+                                <span class="claim-type">IPD Claims</span>
+                                <span class="claim-count">856</span>
+                            </div>
+                            <div class="claim-bar ipd">
+                                <div class="claim-bar-fill" style="--width: 22.3%"></div>
+                            </div>
+                            <span class="claim-amount">GH₵ 685,200</span>
+                        </div>
+                        <div class="claim-bar-item">
+                            <div class="claim-bar-header">
+                                <span class="claim-type">Medicines</span>
+                                <span class="claim-count">982</span>
+                            </div>
+                            <div class="claim-bar medicines">
+                                <div class="claim-bar-fill" style="--width: 25.6%"></div>
+                            </div>
+                            <span class="claim-amount">GH₵ 312,420</span>
+                        </div>
+                        <div class="claim-bar-item">
+                            <div class="claim-bar-header">
+                                <span class="claim-type">Labs</span>
+                                <span class="claim-count">462</span>
+                            </div>
+                            <div class="claim-bar labs">
+                                <div class="claim-bar-fill" style="--width: 12%"></div>
+                            </div>
+                            <span class="claim-amount">GH₵ 152,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reported Claims Status -->
+                <div class="card">
+                    <h3>Reported Claims Status</h3>
+                    <div class="donut-chart-container">
+                        <canvas id="claimsStatusChart" width="200" height="200"></canvas>
+                        <div class="donut-center">
+                            <span class="donut-total">3,842</span>
+                            <span class="donut-label">Total</span>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <span class="legend-color approved"></span>
+                            <span>Approved: 3,456 (89.9%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color declined"></span>
+                            <span>Declined: 386 (10.1%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Claims by Cost -->
+                <div class="card">
+                    <h3>Claims Cost Summary</h3>
+                    <div class="cost-summary">
+                        <div class="cost-item">
+                            <span class="cost-label">Total Claims Value</span>
+                            <span class="cost-value">GH₵ 1,575,420</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Average Claim Value</span>
+                            <span class="cost-value">GH₵ 410</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Highest Single Claim</span>
+                            <span class="cost-value">GH₵ 45,200</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Declined Claims Value</span>
+                            <span class="cost-value negative">GH₵ 142,580</span>
+                        </div>
+                    </div>
+                    <div class="cost-trend">
+                        <canvas id="claimsTrendChart" width="280" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Financial Reports Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Financial Reports</h2>
+            </div>
+            <div class="grid-2">
+                <!-- Arrears Report -->
+                <div class="card">
+                    <h3>Arrears Report</h3>
+                    <div class="arrears-summary">
+                        <div class="arrears-total">
+                            <span class="arrears-label">Total Outstanding Arrears</span>
+                            <span class="arrears-value">GH₵ 458,620</span>
+                        </div>
+                        <div class="arrears-breakdown">
+                            <div class="arrears-item">
+                                <div class="arrears-age">0-30 Days</div>
+                                <div class="arrears-bar">
+                                    <div class="arrears-fill age-30" style="--width: 35%"></div>
+                                </div>
+                                <div class="arrears-amount">GH₵ 160,517</div>
+                            </div>
+                            <div class="arrears-item">
+                                <div class="arrears-age">31-60 Days</div>
+                                <div class="arrears-bar">
+                                    <div class="arrears-fill age-60" style="--width: 28%"></div>
+                                </div>
+                                <div class="arrears-amount">GH₵ 128,414</div>
+                            </div>
+                            <div class="arrears-item">
+                                <div class="arrears-age">61-90 Days</div>
+                                <div class="arrears-bar">
+                                    <div class="arrears-fill age-90" style="--width: 22%"></div>
+                                </div>
+                                <div class="arrears-amount">GH₵ 100,896</div>
+                            </div>
+                            <div class="arrears-item">
+                                <div class="arrears-age">90+ Days</div>
+                                <div class="arrears-bar">
+                                    <div class="arrears-fill age-over" style="--width: 15%"></div>
+                                </div>
+                                <div class="arrears-amount">GH₵ 68,793</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Summary -->
+                <div class="card">
+                    <h3>Financial Summary</h3>
+                    <div class="financial-grid">
+                        <div class="financial-item income">
+                            <div class="financial-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                    <polyline points="17 6 23 6 23 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="financial-info">
+                                <span class="financial-label">Total Income</span>
+                                <span class="financial-value">GH₵ 2,916,620</span>
+                            </div>
+                        </div>
+                        <div class="financial-item expense">
+                            <div class="financial-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                                    <polyline points="17 18 23 18 23 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="financial-info">
+                                <span class="financial-label">Total Expenses</span>
+                                <span class="financial-value">GH₵ 2,218,000</span>
+                            </div>
+                        </div>
+                        <div class="financial-item net">
+                            <div class="financial-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                            <div class="financial-info">
+                                <span class="financial-label">Net Balance</span>
+                                <span class="financial-value positive">GH₵ 698,620</span>
+                            </div>
+                        </div>
+                        <div class="financial-item reserves">
+                            <div class="financial-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                            </div>
+                            <div class="financial-info">
+                                <span class="financial-label">Reserves</span>
+                                <span class="financial-value">GH₵ 1,245,800</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <span>© 2024 Reporting & Analytics Dashboard</span>
+            <span>Last updated: <span id="lastUpdated">Just now</span></span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
