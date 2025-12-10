@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      REMOTE_PATH: "C:\\projects\\dashboard\\dist"
+      REMOTE_PATH: "C:\\projects\\dashboard"
       BACKUP_PATH: "C:\\projects\\dashboard\\backup"
       IIS_SITE_NAME: "ANGULAR-DASHBOARD"
 
