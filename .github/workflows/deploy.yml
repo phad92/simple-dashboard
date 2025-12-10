@@ -1,44 +1,134 @@
-name: Deploy to IIS
+# name: Deploy to IIS
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build-and-deploy:
+#     runs-on: windows-latest
+    
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+      
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '21'
+#           cache: 'npm'
+      
+#       - name: Install dependencies
+#         run: npm ci
+      
+#       - name: Build Angular app
+#         run: npm run build --configuration production
+      
+#       - name: Deploy to IIS via PowerShell
+#         shell: powershell
+#         run: |
+#           # Create credential object
+#           $securePassword = ConvertTo-SecureString "${{ secrets.SID_REMOTE_PASSWORD }}" -AsPlainText -Force
+#           $credential = New-Object System.Management.Automation.PSCredential ("${{ secrets.SID_REMOTE_USER }}", $securePassword)
+          
+#           # Create remote session
+#           $session = New-PSSession -ComputerName "${{ secrets.SID_REMOTE_HOST }}" -Credential $credential
+          
+#           # Copy files to server
+#           Copy-Item -Path "dist/dashboard-angular/*" -Destination "C:\inetpub\wwwroot\your-app\" -ToSession $session -Recurse -Force
+          
+#           # Close session
+#           Remove-PSSession $session
+          
+#           Write-Host "Deployment completed successfully!"
+
+name: Build & Deploy Angular App to IIS (SSH + Password)
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
 
 jobs:
-  build-and-deploy:
-    runs-on: windows-latest
-    
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      REMOTE_PATH: "C:\\projects\\dashboard\\dist"
+      BACKUP_PATH: "C:\\projects\\dashboard\\backup"
+      IIS_SITE_NAME: "ANGULAR-DASHBOARD"
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Node setup
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '21'
-          cache: 'npm'
-      
+          node-version: 20
+          cache: "npm"
+
+      # Install Angular CLI
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      # Install dependencies
       - name: Install dependencies
         run: npm ci
-      
-      - name: Build Angular app
-        run: npm run build --configuration production
-      
-      - name: Deploy to IIS via PowerShell
-        shell: powershell
-        run: |
-          # Create credential object
-          $securePassword = ConvertTo-SecureString "${{ secrets.SID_REMOTE_PASSWORD }}" -AsPlainText -Force
-          $credential = New-Object System.Management.Automation.PSCredential ("${{ secrets.SID_REMOTE_USER }}", $securePassword)
-          
-          # Create remote session
-          $session = New-PSSession -ComputerName "${{ secrets.SID_REMOTE_HOST }}" -Credential $credential
-          
-          # Copy files to server
-          Copy-Item -Path "dist/dashboard-angular/*" -Destination "C:\inetpub\wwwroot\your-app\" -ToSession $session -Recurse -Force
-          
-          # Close session
-          Remove-PSSession $session
-          
-          Write-Host "Deployment completed successfully!"
+
+      # Build Angular app
+      - name: Build Angular
+        run: ng build --configuration production
+
+      # Upload build output using SCP
+      - name: Upload Angular build to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SID_REMOTE_HOST }}
+          username: ${{ secrets.SID_REMOTE_USER }}
+          password: ${{ secrets.SID_REMOTE_PASSWORD }}
+
+          # For Angular 17+
+          source: "dist/*/browser/*"
+
+          # For Angular <=16 (fallback)
+          # source: "dist/<your-app-name>/*"
+
+          target: ${{ env.REMOTE_PATH }}
+
+      # Deploy remotely on IIS
+      - name: Run IIS deployment script
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SID_REMOTE_HOST }}
+          username: ${{ secrets.SID_REMOTE_USER }}
+          password: ${{ secrets.SID_REMOTE_PASSWORD }}
+          script: |
+            Import-Module WebAdministration
+
+            # Ensure paths exist
+            if (!(Test-Path "$($env:REMOTE_PATH)")) {
+              New-Item -ItemType Directory -Path "$($env:REMOTE_PATH)"
+            }
+            if (!(Test-Path "$($env:BACKUP_PATH)")) {
+              New-Item -ItemType Directory -Path "$($env:BACKUP_PATH)"
+            }
+
+            # Backup old deployment
+            $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+            $backup = "$($env:BACKUP_PATH)/$timestamp"
+            if (Test-Path "$($env:REMOTE_PATH)") {
+              Copy-Item "$($env:REMOTE_PATH)/*" $backup -Recurse -ErrorAction SilentlyContinue
+            }
+
+            # Stop IIS site
+            Stop-Website -Name $env:IIS_SITE_NAME
+
+            # Deploy new files
+            Remove-Item "$($env:REMOTE_PATH)/*" -Recurse -Force -ErrorAction SilentlyContinue
+            Copy-Item "C:/Users/$env:USERNAME/dist/*/browser/*" "$($env:REMOTE_PATH)" -Recurse
+
+            # Start IIS site
+            Start-Website -Name $env:IIS_SITE_NAME
