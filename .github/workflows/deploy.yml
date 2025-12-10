@@ -102,9 +102,9 @@ jobs:
       - name: Deploy to IIS via SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASS }}
+          host: ${{ secrets.SID_REMOTE_HOST }}
+          username: ${{ secrets.SID_REMOTE_USER }}
+          password: ${{ secrets.SID_REMOTE_PASSWORD }}
           script: |
             powershell -NoProfile -ExecutionPolicy Bypass -Command "
               Import-Module WebAdministration;
