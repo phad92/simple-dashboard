@@ -99,36 +99,41 @@ jobs:
           target: ${{ env.REMOTE_PATH }}
 
       # Deploy remotely on IIS
-      - name: Run IIS deployment script
+      - name: Deploy to IIS via SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.SID_REMOTE_HOST }}
-          username: ${{ secrets.SID_REMOTE_USER }}
-          password: ${{ secrets.SID_REMOTE_PASSWORD }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
           script: |
-            Import-Module WebAdministration
+            powershell -NoProfile -ExecutionPolicy Bypass -Command "
+              Import-Module WebAdministration;
 
-            # Ensure paths exist
-            if (!(Test-Path "$($env:REMOTE_PATH)")) {
-              New-Item -ItemType Directory -Path "$($env:REMOTE_PATH)"
-            }
-            if (!(Test-Path "$($env:BACKUP_PATH)")) {
-              New-Item -ItemType Directory -Path "$($env:BACKUP_PATH)"
-            }
+              Write-Host 'Running PowerShell inside SSH session';
 
-            # Backup old deployment
-            $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
-            $backup = "$($env:BACKUP_PATH)/$timestamp"
-            if (Test-Path "$($env:REMOTE_PATH)") {
-              Copy-Item "$($env:REMOTE_PATH)/*" $backup -Recurse -ErrorAction SilentlyContinue
-            }
+              # Ensure paths exist
+              if (!(Test-Path '$env:REMOTE_PATH')) {
+                  New-Item -ItemType Directory -Path '$env:REMOTE_PATH';
+              }
+              if (!(Test-Path '$env:BACKUP_PATH')) {
+                  New-Item -ItemType Directory -Path '$env:BACKUP_PATH';
+              }
 
-            # Stop IIS site
-            Stop-Website -Name $env:IIS_SITE_NAME
+              # Backup old deployment
+              \$timestamp = Get-Date -Format 'yyyyMMdd_HHmmss';
+              \$backup = Join-Path '$env:BACKUP_PATH' \$timestamp;
+              if (Test-Path '$env:REMOTE_PATH') {
+                  Copy-Item '$env:REMOTE_PATH/*' \$backup -Recurse -ErrorAction SilentlyContinue;
+              }
 
-            # Deploy new files
-            Remove-Item "$($env:REMOTE_PATH)/*" -Recurse -Force -ErrorAction SilentlyContinue
-            Copy-Item "C:/Users/$env:USERNAME/dist/*/browser/*" "$($env:REMOTE_PATH)" -Recurse
+              # Stop IIS site
+              Stop-Website -Name '$env:IIS_SITE_NAME';
 
-            # Start IIS site
-            Start-Website -Name $env:IIS_SITE_NAME
+              # Deploy new files
+              Remove-Item '$env:REMOTE_PATH/*' -Recurse -Force -ErrorAction SilentlyContinue;
+              Copy-Item 'C:/Users/${{ secrets.SSH_USER }}/dist/*/browser/*' '$env:REMOTE_PATH' -Recurse;
+
+              # Start IIS site
+              Start-Website -Name '$env:IIS_SITE_NAME';
+            "
+
