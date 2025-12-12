@@ -1,316 +1,99 @@
-<!-- Header -->
-<header class="bg-white/95 backdrop-blur-xl border-b border-black/5 sticky top-0 z-50 shadow-sm">
-  <div
-    class="max-w-7xl mx-auto px-4 md:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
-    <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
-      <div class="flex items-center gap-4">
-        <div
-          class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/25">
-          <i class="pi pi-chart-bar text-white text-lg"></i>
+<div class="app-layout" [class.sidebar-collapsed]="sidebarCollapsed">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <!-- Logo Section -->
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="pi pi-chart-bar"></i>
         </div>
-        <h1
-          class="text-lg md:text-xl font-bold bg-gradient-to-r from-slate-900 to-indigo-600 bg-clip-text text-transparent">
-          <!-- Analytics --> Dashboard</h1>
+        <span class="logo-text" *ngIf="!sidebarCollapsed">NHIA Portal</span>
       </div>
-      <div class="md:hidden text-sm text-slate-600">
-        <i class="pi pi-bars text-xl"></i>
-      </div>
+      <button class="collapse-btn" (click)="toggleSidebar()">
+        <i class="pi" [class]="sidebarCollapsed ? 'pi-angle-right' : 'pi-angle-left'"></i>
+      </button>
     </div>
-    <nav class="flex gap-1 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
-      @for (link of navLinks; track link) {
-      <a class="whitespace-nowrap px-3 md:px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer"
-        [class]="activeNav === link ? 'text-cyan-600 bg-cyan-500/10' : 'text-slate-600 hover:text-slate-900 hover:bg-black/5'"
-        (click)="setActiveNav(link)">{{ link }}</a>
-      }
+
+    <!-- Main Navigation -->
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="nav-section-label" *ngIf="!sidebarCollapsed">Main</span>
+        @for (item of mainNavItems; track item.route) {
+        <a [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{exact: item.route === '/'}"
+          class="nav-item">
+          <i class="pi" [class]="item.icon"></i>
+          <span class="nav-label" *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+          @if (item.badge && !sidebarCollapsed) {
+          <span class="nav-badge">{{ item.badge }}</span>
+          }
+        </a>
+        }
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-section-label" *ngIf="!sidebarCollapsed">Analytics</span>
+        @for (item of secondaryNavItems; track item.route) {
+        <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">
+          <i class="pi" [class]="item.icon"></i>
+          <span class="nav-label" *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+        </a>
+        }
+      </div>
     </nav>
-    <div class="hidden md:flex items-center gap-2 text-sm text-slate-600">
+
+    <!-- Bottom Navigation -->
+    <div class="sidebar-footer">
+      @for (item of bottomNavItems; track item.route) {
+      <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">
+        <i class="pi" [class]="item.icon"></i>
+        <span class="nav-label" *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+      </a>
+      }
+
+      <!-- User Profile -->
+      <div class="user-profile" *ngIf="!sidebarCollapsed">
+        <div class="user-avatar">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="user-info">
+          <span class="user-name">Admin User</span>
+          <span class="user-role">Administrator</span>
+        </div>
+      </div>
     </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Top Header Bar -->
+    <header class="top-header">
+      <div class="header-left">
+        <button class="mobile-menu-btn" (click)="toggleSidebar()">
+          <i class="pi pi-bars"></i>
+        </button>
+        <div class="search-box">
+          <i class="pi pi-search"></i>
+          <input type="text" placeholder="Search anything...">
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="header-date">{{ currentDate | date:'EEEE, MMM d, yyyy' }}</span>
+        <button class="header-btn">
+          <i class="pi pi-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        <button class="header-btn">
+          <i class="pi pi-cog"></i>
+        </button>
+        <div class="header-avatar">
+          <i class="pi pi-user"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
   </div>
-</header>
-
-<main class="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8">
-  <!-- KPI Cards Row -->
-  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-    @for (kpi of kpiData; track kpi.label) {
-    <app-kpi-card [icon]="kpi.icon" [iconClass]="kpi.iconClass" [label]="kpi.label" [value]="kpi.value"
-      [prefix]="kpi.prefix || ''" [change]="kpi.change" [changeType]="kpi.changeType">
-    </app-kpi-card>
-    }
-  </section>
-
-  <!-- Member Demographics Section -->
-  <section class="section">
-    <div class="section-header">
-      <h2>Member Demographics</h2>
-      <div>
-        <p-button label="Export" icon="pi pi-download" styleClass="p-button-outlined p-button-secondary"></p-button>
-      </div>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Member Status Card -->
-      <div class="card">
-        <h3>Member Status Distribution</h3>
-        <div class="status-grid">
-          @for (status of memberStatus; track status.status) {
-          <div class="status-item" [class]="status.statusClass">
-            <span class="status-dot"></span>
-            <div class="status-info">
-              <span class="status-label">{{ status.status }}</span>
-              <span class="status-value">{{ status.value | number }}</span>
-            </div>
-            <span class="status-percent">{{ status.percent }}</span>
-          </div>
-          }
-        </div>
-      </div>
-
-      <!-- Gender Distribution -->
-      <div class="card">
-        <h3>Gender Distribution</h3>
-        <app-donut-chart [data]="genderData" total="24,856" label="Total"></app-donut-chart>
-      </div>
-
-      <!-- Principals vs Dependants -->
-      <div class="card">
-        <h3>Principals vs Dependants</h3>
-        <app-donut-chart [data]="memberTypeData" total="24,856" label="Total"></app-donut-chart>
-      </div>
-    </div>
-  </section>
-
-  <!-- Provider Payments & Premium Collection -->
-  <section class="section">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Provider Payments -->
-      <div class="card">
-        <h3>Provider Payments</h3>
-        <div class="grid grid-cols-2 gap-4 mb-6">
-          <div class="payment-card paid">
-            <div class="payment-icon">
-              <i class="pi pi-check-circle"></i>
-            </div>
-            <div class="flex flex-col">
-              <span class="payment-label">Total Paid</span>
-              <span class="payment-value">GH₵ 1,875,420</span>
-            </div>
-          </div>
-          <div class="payment-card pending">
-            <div class="payment-icon">
-              <i class="pi pi-clock"></i>
-            </div>
-            <div class="flex flex-col">
-              <span class="payment-label">Pending Payments</span>
-              <span class="payment-value">GH₵ 342,580</span>
-            </div>
-          </div>
-        </div>
-        <div class="pt-4 border-t border-black/5">
-          <div class="flex justify-between mb-2 text-sm text-slate-600">
-            <span>Payment Progress</span>
-            <span>84.5%</span>
-          </div>
-          <p-progressBar [value]="84.5" [showValue]="false"></p-progressBar>
-        </div>
-      </div>
-
-      <!-- Funds Collected vs Claims Paid -->
-      <div class="card">
-        <h3>Funds Collected vs Claims Paid</h3>
-        <div class="flex flex-col gap-6 mb-6">
-          <div class="flex flex-col gap-2">
-            <div class="flex justify-between">
-              <span class="text-sm text-slate-600">Premium Collected</span>
-              <span class="text-sm font-semibold text-slate-900">GH₵ 2,458,000</span>
-            </div>
-            <div class="comparison-bar collected">
-              <div class="bar-fill" style="--width: 100%"></div>
-            </div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <div class="flex justify-between">
-              <span class="text-sm text-slate-600">Claims Paid</span>
-              <span class="text-sm font-semibold text-slate-900">GH₵ 1,875,420</span>
-            </div>
-            <div class="comparison-bar claims-paid">
-              <div class="bar-fill" style="--width: 76.3%"></div>
-            </div>
-          </div>
-        </div>
-        <div class="flex gap-12 pt-4 border-t border-black/5">
-          <div class="flex flex-col gap-1">
-            <span class="text-xs text-slate-500">Loss Ratio</span>
-            <span class="text-lg font-bold text-emerald-600">76.3%</span>
-          </div>
-          <div class="flex flex-col gap-1">
-            <span class="text-xs text-slate-500">Net Surplus</span>
-            <span class="text-lg font-bold text-cyan-600">GH₵ 582,580</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Premium Collection by Channel & CAGD -->
-  <section class="section">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Premium by Channel -->
-      <div class="card">
-        <h3>Premium Collected by Channel</h3>
-        <div class="flex flex-col gap-4">
-          @for (channel of channelData; track channel.name) {
-          <div class="channel-item">
-            <div class="flex items-center gap-4">
-              <div class="channel-icon" [class]="channel.iconClass">
-                @switch (channel.iconClass) {
-                @case ('payroll') { <i class="pi pi-briefcase"></i> }
-                @case ('momo') { <i class="pi pi-mobile"></i> }
-                @case ('bank') { <i class="pi pi-building"></i> }
-                @case ('cash') { <i class="pi pi-wallet"></i> }
-                }
-              </div>
-              <div class="flex flex-col">
-                <span class="channel-name">{{ channel.name }}</span>
-                <span class="channel-count">{{ channel.transactions }}</span>
-              </div>
-            </div>
-            <div class="text-right">
-              <span class="block text-base font-bold text-slate-900">{{ channel.amount }}</span>
-              <span class="text-xs text-slate-500">{{ channel.percent }}</span>
-            </div>
-          </div>
-          }
-        </div>
-      </div>
-
-      <!-- CAGD Deduction Success Rate -->
-      <div class="card">
-        <h3>CAGD Deduction Success Rate</h3>
-        <app-gauge [value]="85" label="Success Rate" successCount="7,261" failedCount="1,281"></app-gauge>
-      </div>
-    </div>
-  </section>
-
-  <!-- Claims Report Section -->
-  <section class="section">
-    <div class="section-header">
-      <h2>Claims Report</h2>
-      <select class="px-4 py-2 bg-black/5 border border-black/5 rounded-lg text-sm text-slate-600 cursor-pointer">
-        <option>Last 30 Days</option>
-        <option>Last 90 Days</option>
-        <option>This Year</option>
-      </select>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Claims by Type -->
-      <div class="card">
-        <h3>Claims by Type</h3>
-        <div class="flex flex-col gap-4">
-          @for (claim of claimsByType; track claim.type) {
-          <div class="flex flex-col gap-2">
-            <div class="flex justify-between">
-              <span class="text-sm text-slate-600">{{ claim.type }}</span>
-              <span class="text-sm font-semibold text-slate-900">{{ claim.count | number }}</span>
-            </div>
-            <div class="claim-bar" [class]="claim.barClass">
-              <div class="claim-bar-fill" [style.--width]="claim.width"></div>
-            </div>
-            <span class="text-xs text-slate-500">{{ claim.amount }}</span>
-          </div>
-          }
-        </div>
-      </div>
-
-      <!-- Reported Claims Status -->
-      <div class="card">
-        <h3>Reported Claims Status</h3>
-        <app-donut-chart [data]="claimsStatusData" total="3,842" label="Total"></app-donut-chart>
-      </div>
-
-      <!-- Claims Cost Summary -->
-      <div class="card">
-        <h3>Claims Cost Summary</h3>
-        <div class="flex flex-col gap-4 mb-6">
-          <div class="flex justify-between py-2 border-b border-black/5">
-            <span class="text-sm text-slate-600">Total Claims Value</span>
-            <span class="text-sm font-semibold text-slate-900">GH₵ 1,575,420</span>
-          </div>
-          <div class="flex justify-between py-2 border-b border-black/5">
-            <span class="text-sm text-slate-600">Average Claim Value</span>
-            <span class="text-sm font-semibold text-slate-900">GH₵ 410</span>
-          </div>
-          <div class="flex justify-between py-2 border-b border-black/5">
-            <span class="text-sm text-slate-600">Highest Single Claim</span>
-            <span class="text-sm font-semibold text-slate-900">GH₵ 45,200</span>
-          </div>
-          <div class="flex justify-between py-2">
-            <span class="text-sm text-slate-600">Declined Claims Value</span>
-            <span class="text-sm font-semibold text-red-600">GH₵ 142,580</span>
-          </div>
-        </div>
-        <app-trend-chart [data]="trendData" [width]="280" [height]="100"></app-trend-chart>
-      </div>
-    </div>
-  </section>
-
-  <!-- Financial Reports Section -->
-  <section class="section">
-    <div class="section-header">
-      <h2>Financial Reports</h2>
-    </div>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Arrears Report -->
-      <div class="card">
-        <h3>Arrears Report</h3>
-        <div class="mb-6">
-          <div class="text-center mb-6">
-            <span class="text-sm text-slate-500">Total Outstanding Arrears</span>
-            <p class="text-2xl font-bold text-slate-900">GH₵ 458,620</p>
-          </div>
-          <div class="flex flex-col gap-4">
-            @for (arrear of arrearsData; track arrear.age) {
-            <div class="flex items-center gap-4">
-              <span class="w-24 text-sm text-slate-600">{{ arrear.age }}</span>
-              <div class="flex-1 h-2 bg-black/10 rounded-full overflow-hidden">
-                <div class="arrears-fill" [class]="arrear.fillClass" [style.--width]="arrear.width"></div>
-              </div>
-              <span class="w-28 text-right text-sm font-semibold text-slate-900">{{ arrear.amount }}</span>
-            </div>
-            }
-          </div>
-        </div>
-      </div>
-
-      <!-- Financial Summary -->
-      <div class="card">
-        <h3>Financial Summary</h3>
-        <div class="grid grid-cols-2 gap-4">
-          @for (item of financialSummary; track item.label) {
-          <div class="financial-item" [class]="item.type">
-            <div class="financial-icon">
-              @switch (item.type) {
-              @case ('income') { <i class="pi pi-arrow-up-right"></i> }
-              @case ('expense') { <i class="pi pi-arrow-down-right"></i> }
-              @case ('net') { <i class="pi pi-dollar"></i> }
-              @case ('reserves') { <i class="pi pi-box"></i> }
-              }
-            </div>
-            <div class="flex flex-col">
-              <span class="text-xs text-slate-500">{{ item.label }}</span>
-              <span class="text-base font-bold" [class]="item.valueClass || 'text-slate-900'">{{ item.value }}</span>
-            </div>
-          </div>
-          }
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<!-- Footer -->
-<footer class="bg-white/80 backdrop-blur border-t border-black/5 py-4">
-  <div
-    class="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row gap-2 justify-between text-sm text-slate-500 text-center md:text-left">
-    <span>© 2025 Reporting & Analytics Dashboard</span>
-    <span>Last updated: {{ lastUpdated }}</span>
-  </div>
-</footer>
+</div>

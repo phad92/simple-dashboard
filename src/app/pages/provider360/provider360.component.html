@@ -1,0 +1,513 @@
+<!-- Provider360 Hero Section -->
+<div class="bg-gradient-to-br from-slate-900 via-indigo-900 to-violet-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 py-8">
+        <!-- Provider Info Row -->
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-8">
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-16 h-16 bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center border border-white/20">
+                    <i class="pi pi-building text-3xl text-white"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <select [(ngModel)]="selectedProvider" (change)="onProviderChange()"
+                            class="bg-white/10 backdrop-blur border border-white/20 rounded-xl px-4 py-2 text-white text-lg font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30 appearance-none">
+                            @for (provider of providersList; track provider.id) {
+                            <option [value]="provider.id" class="text-slate-900">{{ provider.name }}</option>
+                            }
+                        </select>
+                    </div>
+                    @if (demographics) {
+                    <div class="flex items-center gap-3 text-white/70 text-sm">
+                        <span class="px-2 py-0.5 bg-indigo-500/30 rounded-full text-xs">{{ demographics.facilityType
+                            }}</span>
+                        <span>{{ demographics.region }} • {{ demographics.district }}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            @if (demographics) {
+            <div class="flex gap-6">
+                <div class="text-center">
+                    <div class="text-3xl font-bold">{{ demographics.loyaltyYears }}</div>
+                    <div class="text-xs text-white/60 uppercase tracking-wide">Years with NHIA</div>
+                </div>
+                <div class="w-px bg-white/20"></div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold"
+                        [class]="demographics.daysToExpiry <= 30 ? 'text-red-400' : demographics.daysToExpiry <= 90 ? 'text-amber-400' : 'text-emerald-400'">
+                        {{ demographics.daysToExpiry }}
+                    </div>
+                    <div class="text-xs text-white/60 uppercase tracking-wide">Days to Expiry</div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Hero Stats Grid -->
+        @if (submissions && payment && members) {
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="hero-stat-card">
+                <div class="hero-stat-icon submissions">
+                    <i class="pi pi-file-edit"></i>
+                </div>
+                <div class="hero-stat-value">{{ submissions.avgVolumeService + submissions.avgVolumeMedicine | number }}
+                </div>
+                <div class="hero-stat-label">Avg. Submissions</div>
+                <div class="hero-stat-change positive">
+                    <i class="pi pi-arrow-up text-xs"></i> {{ submissions.onTimeRating }}% on-time
+                </div>
+            </div>
+
+            <div class="hero-stat-card">
+                <div class="hero-stat-icon payment">
+                    <i class="pi pi-wallet"></i>
+                </div>
+                <div class="hero-stat-value">{{ formatCurrency(payment.lastPaymentAmount) }}</div>
+                <div class="hero-stat-label">Last Payment</div>
+                <div class="hero-stat-change neutral">
+                    {{ formatDate(payment.lastPaymentDate) }}
+                </div>
+            </div>
+
+            <div class="hero-stat-card">
+                <div class="hero-stat-icon members">
+                    <i class="pi pi-users"></i>
+                </div>
+                <div class="hero-stat-value">{{ members.totalMembersLast1Year | number }}</div>
+                <div class="hero-stat-label">Total Members</div>
+                <div class="hero-stat-change positive">
+                    <i class="pi pi-arrow-up text-xs"></i> {{ members.avgNewMembersPerMonth }}/mo
+                </div>
+            </div>
+
+            <div class="hero-stat-card">
+                <div class="hero-stat-icon performance">
+                    <i class="pi pi-chart-line"></i>
+                </div>
+                <div class="hero-stat-value">{{ payment.avgVettingDays + payment.avgPaymentDays }}</div>
+                <div class="hero-stat-label">Avg. Process Days</div>
+                <div class="hero-stat-change" [class]="payment.avgVettingDays <= 10 ? 'positive' : 'warning'">
+                    Target: 15 days
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="flex flex-wrap items-center gap-4">
+            <div class="filter-label">
+                <i class="pi pi-filter"></i>
+                <span>Filters:</span>
+            </div>
+
+            <!-- Time Period Filter -->
+            <div class="filter-group">
+                <label class="filter-group-label">Time Period</label>
+                <select class="filter-select">
+                    <option value="12m">Last 12 Months</option>
+                    <option value="6m">Last 6 Months</option>
+                    <option value="3m">Last 3 Months</option>
+                    <option value="1m">Last Month</option>
+                    <option value="ytd">Year to Date</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+            </div>
+
+            <!-- Region Filter -->
+            <div class="filter-group">
+                <label class="filter-group-label">Region</label>
+                <select class="filter-select">
+                    <option value="all">All Regions</option>
+                    <option value="greater-accra">Greater Accra</option>
+                    <option value="ashanti">Ashanti</option>
+                    <option value="western">Western</option>
+                    <option value="central">Central</option>
+                    <option value="eastern">Eastern</option>
+                    <option value="northern">Northern</option>
+                </select>
+            </div>
+
+            <!-- Facility Type Filter -->
+            <div class="filter-group">
+                <label class="filter-group-label">Facility Type</label>
+                <select class="filter-select">
+                    <option value="all">All Types</option>
+                    <option value="teaching">Teaching Hospital</option>
+                    <option value="regional">Regional Hospital</option>
+                    <option value="district">District Hospital</option>
+                    <option value="health-center">Health Center</option>
+                    <option value="clinic">Clinic</option>
+                </select>
+            </div>
+
+            <!-- Spacer -->
+            <div class="flex-1"></div>
+
+            <!-- Action Buttons -->
+            <div class="filter-actions">
+                <button class="filter-btn secondary">
+                    <i class="pi pi-refresh"></i>
+                    Reset
+                </button>
+                <button class="filter-btn primary">
+                    <i class="pi pi-check"></i>
+                    Apply Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main class="max-w-7xl mx-auto px-4 md:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Left Column - 2 cols wide -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- Submissions Card -->
+            @if (submissions) {
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="pi pi-file-edit text-indigo-500"></i>
+                        <span>Submissions Overview</span>
+                    </div>
+                    <span class="card-subtitle">Last 12 months</span>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="mini-stat">
+                        <span class="mini-stat-value">{{ submissions.avgVolumeService | number }}</span>
+                        <span class="mini-stat-label">Services Vol.</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-value">{{ submissions.avgVolumeMedicine | number }}</span>
+                        <span class="mini-stat-label">Medicine Vol.</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-value">{{ formatCurrency(submissions.avgCostService) }}</span>
+                        <span class="mini-stat-label">Services Cost</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-value">{{ formatCurrency(submissions.avgCostMedicine) }}</span>
+                        <span class="mini-stat-label">Medicine Cost</span>
+                    </div>
+                </div>
+
+                <!-- Adjustment Rates -->
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-slate-600">Service Adjustment Rate</span>
+                            <span class="font-semibold text-amber-600">{{ submissions.avgAdjustmentService }}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill amber" [style.width.%]="submissions.avgAdjustmentService * 2">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-slate-600">Medicine Adjustment Rate</span>
+                            <span class="font-semibold text-orange-600">{{ submissions.avgAdjustmentMedicine }}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill orange" [style.width.%]="submissions.avgAdjustmentMedicine * 2">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-slate-600">On-Time Rating</span>
+                            <span class="font-semibold text-emerald-600">{{ submissions.onTimeRating }}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill emerald" [style.width.%]="submissions.onTimeRating"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission Info -->
+                <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-100">
+                    <div class="info-cell">
+                        <span class="info-value">{{ submissions.lastSubmissionBatch }}</span>
+                        <span class="info-label">Last Batch</span>
+                    </div>
+                    <div class="info-cell">
+                        <span class="info-value warning">{{ submissions.totalSkippedSubmissions }}</span>
+                        <span class="info-label">Skipped</span>
+                    </div>
+                    <div class="info-cell">
+                        <span class="info-value">{{ submissions.avgSubmissionDays }} days</span>
+                        <span class="info-label">Avg. Submit Time</span>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Payment Performance Card -->
+            @if (payment) {
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="pi pi-credit-card text-emerald-500"></i>
+                        <span>Payment Performance</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- NHIS Performance Gauges -->
+                    <div class="flex items-center justify-around py-4">
+                        <div class="gauge-item">
+                            <div class="gauge-circle" [class]="payment.avgVettingDays <= 10 ? 'good' : 'warning'">
+                                <span class="gauge-value">{{ payment.avgVettingDays }}</span>
+                                <span class="gauge-unit">days</span>
+                            </div>
+                            <span class="gauge-label">Vetting Time</span>
+                            <span class="gauge-target">Target: 10 days</span>
+                        </div>
+                        <div class="gauge-item">
+                            <div class="gauge-circle" [class]="payment.avgPaymentDays <= 5 ? 'good' : 'warning'">
+                                <span class="gauge-value">{{ payment.avgPaymentDays }}</span>
+                                <span class="gauge-unit">days</span>
+                            </div>
+                            <span class="gauge-label">Payment Time</span>
+                            <span class="gauge-target">Target: 5 days</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Stats -->
+                    <div class="space-y-4">
+                        <div class="stat-row-item">
+                            <div class="stat-row-icon emerald">
+                                <i class="pi pi-check-circle"></i>
+                            </div>
+                            <div class="stat-row-content">
+                                <span class="stat-row-label">Last Payment</span>
+                                <span class="stat-row-value">{{ formatCurrency(payment.lastPaymentAmount) }}</span>
+                            </div>
+                            <span class="stat-row-badge">{{ payment.lastPaymentBatch }}</span>
+                        </div>
+                        <div class="stat-row-item">
+                            <div class="stat-row-icon amber">
+                                <i class="pi pi-exclamation-circle"></i>
+                            </div>
+                            <div class="stat-row-content">
+                                <span class="stat-row-label">Unpaid Batches</span>
+                                <span class="stat-row-value">{{ payment.unpaidBatches }}</span>
+                            </div>
+                        </div>
+                        <div class="stat-row-item">
+                            <div class="stat-row-icon slate">
+                                <i class="pi pi-clock"></i>
+                            </div>
+                            <div class="stat-row-content">
+                                <span class="stat-row-label">Avg. Payment Cycle</span>
+                                <span class="stat-row-value">{{ payment.avgPaymentTimeMonths }} months</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="space-y-6">
+
+            <!-- Members Card -->
+            @if (members) {
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="pi pi-users text-violet-500"></i>
+                        <span>Members</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="member-stat-row">
+                        <div class="member-stat-icon violet">
+                            <i class="pi pi-users"></i>
+                        </div>
+                        <div>
+                            <div class="member-stat-value">{{ members.totalMembersLast1Year | number }}</div>
+                            <div class="member-stat-label">Total Members (1 Year)</div>
+                        </div>
+                    </div>
+
+                    <div class="member-stat-row">
+                        <div class="member-stat-icon emerald">
+                            <i class="pi pi-user-plus"></i>
+                        </div>
+                        <div>
+                            <div class="member-stat-value">{{ members.avgNewMembersPerMonth }}</div>
+                            <div class="member-stat-label">New Members/Month</div>
+                        </div>
+                    </div>
+
+                    <div class="member-stat-row">
+                        <div class="member-stat-icon amber">
+                            <i class="pi pi-share-alt"></i>
+                        </div>
+                        <div>
+                            <div class="member-stat-value">{{ members.avgShareWithOtherProviders }}%</div>
+                            <div class="member-stat-label">Share with Others</div>
+                        </div>
+                    </div>
+
+                    <div class="member-stat-row">
+                        <div class="member-stat-icon sky">
+                            <i class="pi pi-map"></i>
+                        </div>
+                        <div>
+                            <div class="member-stat-value">{{ members.uniqueRegionsWithShare }}</div>
+                            <div class="member-stat-label">Regions Covered</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Audit Card -->
+            @if (audit) {
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="pi pi-search text-rose-500"></i>
+                        <span>Audit History</span>
+                    </div>
+                    <span class="card-subtitle">Last 5 years</span>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="audit-stat-row">
+                        <div class="audit-icon last-audit">
+                            <i class="pi pi-calendar"></i>
+                        </div>
+                        <div>
+                            <div class="audit-stat-value">{{ audit.lastAuditDate ? formatDate(audit.lastAuditDate) :
+                                'Never' }}</div>
+                            <div class="audit-stat-label">Last Audit Date</div>
+                        </div>
+                    </div>
+
+                    <div class="audit-stat-row">
+                        <div class="audit-icon total-audits">
+                            <i class="pi pi-check-circle"></i>
+                        </div>
+                        <div>
+                            <div class="audit-stat-value">{{ audit.totalAuditsLast5Years }}</div>
+                            <div class="audit-stat-label">Total Audits (5 Years)</div>
+                        </div>
+                    </div>
+
+                    <div class="audit-stat-row">
+                        <div class="audit-icon recovered">
+                            <i class="pi pi-money-bill"></i>
+                        </div>
+                        <div>
+                            <div class="audit-stat-value">{{ formatCurrency(audit.cumulativeRecovered) }}</div>
+                            <div class="audit-stat-label">Cumulative Recovered</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Rating Card -->
+            @if (rating) {
+            <div class="dashboard-card rating-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="pi pi-star-fill text-amber-500"></i>
+                        <span>Public Rating</span>
+                    </div>
+                </div>
+
+                <div class="rating-content">
+                    <div class="rating-score">
+                        <span class="rating-number">{{ rating.averagePublicRating }}</span>
+                        <span class="rating-max">/ 5</span>
+                    </div>
+                    <div class="rating-stars">
+                        @for (star of [1, 2, 3, 4, 5]; track star) {
+                        <i class="pi"
+                            [class]="star <= rating.averagePublicRating ? 'pi-star-fill text-amber-400' : (star - 0.5 <= rating.averagePublicRating ? 'pi-star-fill text-amber-400' : 'pi-star text-slate-300')"></i>
+                        }
+                    </div>
+                    <div class="rating-label">Average Public Rating</div>
+                </div>
+            </div>
+            }
+
+
+            <!-- Benchmarks Card -->
+            @if (benchmarks) {
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="pi pi-chart-bar text-sky-500"></i>
+                        <span>Benchmarks</span>
+                    </div>
+                    <span class="card-subtitle">12-month</span>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="benchmark-row">
+                        <span class="benchmark-label">OPD to IPD Submissions</span>
+                        <span class="benchmark-value">{{ benchmarks.opdToIpdSubmissions }}%</span>
+                    </div>
+                    <div class="benchmark-row">
+                        <span class="benchmark-label">Antibiotic Rx Rate</span>
+                        <span class="benchmark-value"
+                            [class]="benchmarks.antibioticPrescriptionRate > 30 ? 'warning' : ''">{{
+                            benchmarks.antibioticPrescriptionRate }}%</span>
+                    </div>
+                    <div class="benchmark-row">
+                        <span class="benchmark-label">Pending Tickets</span>
+                        <span class="benchmark-value" [class]="benchmarks.pendingTickets > 10 ? 'warning' : ''">{{
+                            benchmarks.pendingTickets }}</span>
+                    </div>
+                    <div class="benchmark-row">
+                        <span class="benchmark-label">IPD/OPD Ratio</span>
+                        <span class="benchmark-value">{{ benchmarks.avgIpdToOpdRatio }}</span>
+                    </div>
+                    <div class="benchmark-row">
+                        <span class="benchmark-label">Detention/OPD Ratio</span>
+                        <span class="benchmark-value">{{ benchmarks.avgDetentionToOpdRatio }}</span>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Credential Status Card -->
+            @if (demographics) {
+            <div class="dashboard-card credential-card" [class]="getDaysToExpiryClass(demographics.daysToExpiry)">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="pi pi-id-card"></i>
+                        <span>Credential Status</span>
+                    </div>
+                </div>
+                <div class="credential-content">
+                    <div class="credential-date">{{ formatDate(demographics.credExpiryDate) }}</div>
+                    <div class="credential-days">
+                        <span class="days-count">{{ demographics.daysToExpiry }}</span>
+                        <span class="days-label">days remaining</span>
+                    </div>
+                </div>
+            </div>
+            }
+
+        </div>
+    </div>
+</main>

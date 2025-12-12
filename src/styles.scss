@@ -38,6 +38,81 @@ body::before {
   animation: fadeInUp 0.5s ease forwards;
 }
 
+/* Filter Action Buttons */
+.filter-bar .p-button-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+/* Apply Button - Primary Action with emphasis */
+.filter-bar .p-button-sm:not(.p-button-outlined) {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  padding: 0.625rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  position: relative;
+  overflow: hidden;
+  color: white !important;
+}
+
+.filter-bar .p-button-sm:not(.p-button-outlined) .p-button-label {
+  color: white !important;
+}
+
+.filter-bar .p-button-sm:not(.p-button-outlined) .p-button-icon {
+  color: white !important;
+}
+
+.filter-bar .p-button-sm:not(.p-button-outlined)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.filter-bar .p-button-sm:not(.p-button-outlined):hover::before {
+  left: 100%;
+}
+
+.filter-bar .p-button-sm:not(.p-button-outlined):hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.5);
+  color: white !important;
+}
+
+.filter-bar .p-button-sm:not(.p-button-outlined):active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Reset Button */
+.filter-bar .p-button-outlined {
+  border: 1px solid #cbd5e1 !important;
+  color: #64748b !important;
+  background: white !important;
+}
+
+.filter-bar .p-button-outlined .p-button-label {
+  color: #64748b !important;
+}
+
+.filter-bar .p-button-outlined:hover {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+  color: #475569 !important;
+}
+
 /* Custom component styles */
 @layer components {
   .card {
@@ -250,7 +325,772 @@ body::before {
   @apply bg-gradient-to-r from-pink-500 to-rose-400;
 }
 
+/* ============================================
+   App Layout & Sidebar Styles
+   ============================================ */
+
+/* Main Layout */
+.app-layout {
+  @apply flex min-h-screen;
+}
+
+/* Sidebar */
+.sidebar {
+  @apply w-64 bg-slate-900 text-white flex flex-col fixed h-full z-50 transition-all duration-300;
+}
+
+.sidebar-collapsed .sidebar {
+  @apply w-20;
+}
+
+.sidebar-header {
+  @apply flex items-center justify-between p-4 border-b border-white/10;
+}
+
+.logo {
+  @apply flex items-center gap-3;
+}
+
+.logo-icon {
+  @apply w-10 h-10 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-xl 
+         flex items-center justify-center text-white shadow-lg shadow-indigo-500/30;
+}
+
+.logo-icon i {
+  @apply text-lg;
+}
+
+.logo-text {
+  @apply font-bold text-lg text-white;
+}
+
+.collapse-btn {
+  @apply w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 
+         hover:bg-white/20 transition-colors text-white/70 hover:text-white;
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+  @apply flex-1 overflow-y-auto py-4;
+}
+
+.nav-section {
+  @apply px-3 mb-6;
+}
+
+.nav-section-label {
+  @apply text-xs uppercase tracking-wider text-white/40 mb-3 px-3 block;
+}
+
+.nav-item {
+  @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/70 
+         hover:bg-white/10 hover:text-white transition-all mb-1 cursor-pointer;
+}
+
+.nav-item.active {
+  @apply bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-500/30;
+}
+
+.nav-item i {
+  @apply text-lg w-6 text-center;
+}
+
+.nav-label {
+  @apply text-sm font-medium;
+}
+
+.nav-badge {
+  @apply ml-auto px-2 py-0.5 bg-red-500 rounded-full text-xs font-semibold;
+}
+
+.sidebar-collapsed .nav-item {
+  @apply justify-center px-0;
+}
+
+.sidebar-collapsed .nav-section {
+  @apply px-2;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  @apply p-3 border-t border-white/10;
+}
+
+.user-profile {
+  @apply flex items-center gap-3 p-3 mt-2 rounded-xl bg-white/5;
+}
+
+.user-avatar {
+  @apply w-10 h-10 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-full 
+         flex items-center justify-center text-white;
+}
+
+.user-info {
+  @apply flex flex-col;
+}
+
+.user-name {
+  @apply text-sm font-semibold text-white;
+}
+
+.user-role {
+  @apply text-xs text-white/50;
+}
+
+/* Main Content Area */
+.main-content {
+  @apply flex-1 ml-64 flex flex-col min-h-screen transition-all duration-300;
+}
+
+.sidebar-collapsed .main-content {
+  @apply ml-20;
+}
+
+/* Top Header */
+.top-header {
+  @apply bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-40;
+}
+
+.header-left {
+  @apply flex items-center gap-4;
+}
+
+.mobile-menu-btn {
+  @apply lg:hidden w-10 h-10 flex items-center justify-center rounded-xl 
+         hover:bg-slate-100 transition-colors text-slate-600;
+}
+
+.search-box {
+  @apply flex items-center gap-3 bg-slate-100 rounded-xl px-4 py-2.5 min-w-80;
+}
+
+.search-box i {
+  @apply text-slate-400;
+}
+
+.search-box input {
+  @apply bg-transparent border-none outline-none text-sm text-slate-700 
+         placeholder:text-slate-400 flex-1;
+}
+
+.header-right {
+  @apply flex items-center gap-4;
+}
+
+.header-date {
+  @apply text-sm text-slate-500 hidden md:block;
+}
+
+.header-btn {
+  @apply w-10 h-10 flex items-center justify-center rounded-xl 
+         hover:bg-slate-100 transition-colors text-slate-600 relative;
+}
+
+.notification-dot {
+  @apply absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full;
+}
+
+.header-avatar {
+  @apply w-10 h-10 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full 
+         flex items-center justify-center text-white cursor-pointer;
+}
+
+/* Page Content */
+.page-content {
+  @apply flex-1 p-6 bg-slate-50;
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    @apply -translate-x-full;
+  }
+  
+  .sidebar-collapsed .sidebar {
+    @apply translate-x-0 w-64;
+  }
+  
+  .main-content {
+    @apply ml-0;
+  }
+  
+  .sidebar-collapsed .main-content {
+    @apply ml-0;
+  }
+}
+
 /* Utility classes */
 .positive { @apply text-emerald-600; }
 .negative { @apply text-red-600; }
 .good { @apply text-emerald-600; }
+
+/* ============================================
+   Provider360 Dashboard Styles - Modern Design
+   ============================================ */
+
+/* Filter Bar */
+.filter-bar {
+  @apply bg-white border-b border-slate-200 py-4 sticky top-[72px] z-30;
+}
+
+.filter-label {
+  @apply flex items-center gap-2 text-sm font-semibold text-slate-700;
+}
+
+.filter-group {
+  @apply flex flex-col gap-1;
+}
+
+.filter-group-label {
+  @apply text-xs text-slate-500;
+}
+
+.filter-select {
+  @apply px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700
+         cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500
+         hover:bg-slate-50 transition-colors min-w-[140px];
+}
+
+.filter-actions {
+  @apply flex items-center gap-2;
+}
+
+.filter-btn {
+  @apply flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all;
+}
+
+.filter-btn.primary {
+  @apply bg-gradient-to-r from-indigo-500 to-violet-500 text-white 
+         hover:shadow-lg hover:shadow-indigo-500/25 hover:-translate-y-0.5;
+}
+
+.filter-btn.secondary {
+  @apply bg-slate-100 text-slate-600 hover:bg-slate-200;
+}
+
+/* Hero Stat Cards */
+.hero-stat-card {
+  @apply bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 
+         transition-all hover:bg-white/15 hover:border-white/30;
+}
+
+.hero-stat-icon {
+  @apply w-10 h-10 rounded-xl flex items-center justify-center text-white mb-3;
+}
+
+.hero-stat-icon.submissions { @apply bg-indigo-500; }
+.hero-stat-icon.payment { @apply bg-emerald-500; }
+.hero-stat-icon.members { @apply bg-violet-500; }
+.hero-stat-icon.performance { @apply bg-sky-500; }
+
+.hero-stat-value {
+  @apply text-2xl font-bold text-white mb-1;
+}
+
+.hero-stat-label {
+  @apply text-sm text-white/60;
+}
+
+.hero-stat-change {
+  @apply text-xs mt-2 flex items-center gap-1;
+}
+
+.hero-stat-change.positive { @apply text-emerald-400; }
+.hero-stat-change.warning { @apply text-amber-400; }
+.hero-stat-change.neutral { @apply text-white/50; }
+
+/* Dashboard Cards */
+.dashboard-card {
+  @apply bg-white rounded-2xl border border-slate-200 p-6 shadow-sm 
+         transition-all hover:shadow-md;
+}
+
+.card-header {
+  @apply flex items-center justify-between mb-6;
+}
+
+.card-title {
+  @apply flex items-center gap-2 text-lg font-semibold text-slate-900;
+}
+
+.card-subtitle {
+  @apply text-sm text-slate-500;
+}
+
+/* Mini Stats */
+.mini-stat {
+  @apply bg-slate-50 rounded-xl p-4 text-center border border-slate-100;
+}
+
+.mini-stat-value {
+  @apply block text-lg font-bold text-slate-900;
+}
+
+.mini-stat-label {
+  @apply text-xs text-slate-500;
+}
+
+/* Progress Bars */
+.progress-bar {
+  @apply h-2 bg-slate-100 rounded-full overflow-hidden;
+}
+
+.progress-fill {
+  @apply h-full rounded-full transition-all;
+}
+
+.progress-fill.amber { @apply bg-gradient-to-r from-amber-400 to-amber-500; }
+.progress-fill.orange { @apply bg-gradient-to-r from-orange-400 to-orange-500; }
+.progress-fill.emerald { @apply bg-gradient-to-r from-emerald-400 to-emerald-500; }
+.progress-fill.indigo { @apply bg-gradient-to-r from-indigo-400 to-indigo-500; }
+
+/* Info Cells */
+.info-cell {
+  @apply text-center;
+}
+
+.info-cell .info-value {
+  @apply block text-lg font-bold text-slate-900;
+}
+
+.info-cell .info-value.warning {
+  @apply text-amber-600;
+}
+
+.info-cell .info-label {
+  @apply text-xs text-slate-500;
+}
+
+/* Gauge Items */
+.gauge-item {
+  @apply flex flex-col items-center;
+}
+
+.gauge-circle {
+  @apply w-20 h-20 rounded-full bg-white border-4 flex flex-col items-center justify-center mb-2 shadow-sm;
+}
+
+.gauge-circle.good { @apply border-emerald-400; }
+.gauge-circle.warning { @apply border-amber-400; }
+
+.gauge-value {
+  @apply text-xl font-bold text-slate-900;
+}
+
+.gauge-unit {
+  @apply text-xs text-slate-500;
+}
+
+.gauge-label {
+  @apply text-sm font-medium text-slate-700;
+}
+
+.gauge-target {
+  @apply text-xs text-slate-400;
+}
+
+/* Stat Row Items */
+.stat-row-item {
+  @apply flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100;
+}
+
+.stat-row-icon {
+  @apply w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0;
+}
+
+.stat-row-icon.emerald { @apply bg-emerald-500; }
+.stat-row-icon.amber { @apply bg-amber-500; }
+.stat-row-icon.slate { @apply bg-slate-400; }
+
+.stat-row-content {
+  @apply flex-1;
+}
+
+.stat-row-label {
+  @apply block text-xs text-slate-500;
+}
+
+.stat-row-value {
+  @apply block text-sm font-bold text-slate-900;
+}
+
+.stat-row-badge {
+  @apply px-2 py-1 bg-slate-200 rounded text-xs text-slate-600;
+}
+
+/* Member Stat Rows */
+.member-stat-row {
+  @apply flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100
+         transition-all hover:bg-slate-100;
+}
+
+.member-stat-row .member-stat-icon {
+  @apply w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0;
+}
+
+.member-stat-row .member-stat-icon.violet { @apply bg-violet-500; }
+.member-stat-row .member-stat-icon.emerald { @apply bg-emerald-500; }
+.member-stat-row .member-stat-icon.amber { @apply bg-amber-500; }
+.member-stat-row .member-stat-icon.sky { @apply bg-sky-500; }
+
+.member-stat-row .member-stat-value {
+  @apply text-lg font-bold text-slate-900;
+}
+
+.member-stat-row .member-stat-label {
+  @apply text-xs text-slate-500;
+}
+
+/* Benchmark Rows */
+.benchmark-row {
+  @apply flex items-center justify-between py-3 border-b border-slate-100 last:border-0;
+}
+
+.benchmark-row .benchmark-label {
+  @apply text-sm text-slate-600;
+}
+
+.benchmark-row .benchmark-value {
+  @apply text-sm font-bold text-slate-900;
+}
+
+.benchmark-row .benchmark-value.warning {
+  @apply text-amber-600;
+}
+
+/* Audit Card Styles */
+.audit-stat-row {
+  @apply flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100
+         transition-all hover:bg-slate-100;
+}
+
+.audit-icon {
+  @apply w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0;
+}
+
+.audit-icon.last-audit { @apply bg-rose-500; }
+.audit-icon.total-audits { @apply bg-indigo-500; }
+.audit-icon.recovered { @apply bg-emerald-500; }
+
+.audit-stat-value {
+  @apply text-lg font-bold text-slate-900;
+}
+
+.audit-stat-label {
+  @apply text-xs text-slate-500;
+}
+
+/* Rating Card Styles */
+.rating-card {
+  @apply bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200;
+}
+
+.rating-content {
+  @apply text-center py-4;
+}
+
+.rating-score {
+  @apply flex items-baseline justify-center gap-1 mb-3;
+}
+
+.rating-number {
+  @apply text-5xl font-bold text-amber-600;
+}
+
+.rating-max {
+  @apply text-xl text-slate-400;
+}
+
+.rating-stars {
+  @apply flex items-center justify-center gap-2 text-2xl mb-3;
+}
+
+.rating-label {
+  @apply text-sm text-slate-600;
+}
+
+/* Credential Card */
+.credential-card {
+  @apply border-2;
+}
+
+.credential-card.critical {
+  @apply bg-red-50 border-red-300;
+}
+
+.credential-card.critical .card-title {
+  @apply text-red-700;
+}
+
+.credential-card.warning {
+  @apply bg-amber-50 border-amber-300;
+}
+
+.credential-card.warning .card-title {
+  @apply text-amber-700;
+}
+
+.credential-card.good {
+  @apply bg-emerald-50 border-emerald-300;
+}
+
+.credential-card.good .card-title {
+  @apply text-emerald-700;
+}
+
+.credential-content {
+  @apply text-center py-4;
+}
+
+.credential-date {
+  @apply text-xl font-bold text-slate-900 mb-2;
+}
+
+.credential-days {
+  @apply flex items-baseline justify-center gap-2;
+}
+
+.credential-days .days-count {
+  @apply text-4xl font-bold;
+}
+
+.credential-card.critical .days-count { @apply text-red-600; }
+.credential-card.warning .days-count { @apply text-amber-600; }
+.credential-card.good .days-count { @apply text-emerald-600; }
+
+.credential-days .days-label {
+  @apply text-sm text-slate-500;
+}
+
+/* ============================================
+   Executive Dashboard Styles
+   ============================================ */
+
+/* Executive Stat Cards */
+.exec-stat-card {
+  @apply bg-white rounded-xl border border-slate-200 p-4 flex items-start gap-3
+         shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5;
+}
+
+.exec-stat-icon {
+  @apply w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0;
+}
+
+.exec-stat-icon.indigo { @apply bg-gradient-to-br from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/25; }
+.exec-stat-icon.emerald { @apply bg-gradient-to-br from-emerald-500 to-teal-400 shadow-lg shadow-emerald-500/25; }
+.exec-stat-icon.cyan { @apply bg-gradient-to-br from-cyan-500 to-sky-400 shadow-lg shadow-cyan-500/25; }
+.exec-stat-icon.teal { @apply bg-gradient-to-br from-teal-500 to-emerald-400 shadow-lg shadow-teal-500/25; }
+.exec-stat-icon.amber { @apply bg-gradient-to-br from-amber-500 to-yellow-400 shadow-lg shadow-amber-500/25; }
+.exec-stat-icon.rose { @apply bg-gradient-to-br from-rose-500 to-pink-400 shadow-lg shadow-rose-500/25; }
+.exec-stat-icon.violet { @apply bg-gradient-to-br from-violet-500 to-purple-400 shadow-lg shadow-violet-500/25; }
+.exec-stat-icon.pink { @apply bg-gradient-to-br from-pink-500 to-rose-400 shadow-lg shadow-pink-500/25; }
+.exec-stat-icon.sky { @apply bg-gradient-to-br from-sky-500 to-blue-400 shadow-lg shadow-sky-500/25; }
+.exec-stat-icon.slate { @apply bg-gradient-to-br from-slate-500 to-gray-400 shadow-lg shadow-slate-500/25; }
+.exec-stat-icon.red { @apply bg-gradient-to-br from-red-500 to-rose-400 shadow-lg shadow-red-500/25; }
+
+.exec-stat-content {
+  @apply flex flex-col gap-0.5;
+}
+
+.exec-stat-value {
+  @apply text-2xl font-bold text-slate-900;
+}
+
+.exec-stat-label {
+  @apply text-sm text-slate-500;
+}
+
+.exec-stat-change {
+  @apply text-xs font-medium mt-1;
+}
+
+.exec-stat-change.positive { @apply text-emerald-600; }
+.exec-stat-change.warning { @apply text-amber-600; }
+.exec-stat-change.neutral { @apply text-slate-500; }
+
+/* Heatmap Cells */
+.heatmap-cell {
+  @apply flex flex-col items-center justify-center p-4 rounded-xl text-center
+         transition-all hover:scale-105 cursor-pointer;
+}
+
+/* Executive Tables */
+.exec-table {
+  @apply w-full;
+}
+
+.exec-table thead tr {
+  @apply border-b border-slate-200;
+}
+
+.exec-table th {
+  @apply text-left text-xs font-semibold text-slate-500 uppercase tracking-wider py-3 px-3;
+}
+
+.exec-table tbody tr {
+  @apply border-b border-slate-100 transition-colors hover:bg-slate-50;
+}
+
+.exec-table td {
+  @apply py-3 px-3 text-sm text-slate-700;
+}
+
+/* Executive Tags */
+.exec-tag {
+  @apply inline-block px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-medium;
+}
+
+/* Regional Stat Cards */
+.regional-stat-card {
+  @apply bg-slate-50 rounded-xl p-4 border border-slate-100 transition-all hover:bg-slate-100;
+}
+
+/* Progress Fill Colors */
+.progress-fill.red { @apply bg-gradient-to-r from-red-400 to-red-500; }
+
+/* Executive Section - Compact Layout */
+.exec-section {
+  @apply mb-5;
+}
+
+.exec-section .section-header {
+  @apply flex items-center justify-between mb-4;
+}
+
+.exec-section .section-header h2 {
+  @apply text-lg font-semibold text-slate-900;
+}
+
+/* Executive Tabs Styling */
+.exec-tabs {
+  .p-tabview-nav {
+    @apply bg-white border-b border-slate-200 rounded-t-xl px-2 gap-1;
+  }
+
+  .p-tabview-nav-link {
+    @apply flex items-center gap-2 px-4 py-3 text-sm font-medium text-slate-600 
+           border-b-2 border-transparent transition-all rounded-t-lg;
+    
+    &:hover {
+      @apply text-indigo-600 bg-indigo-50/50;
+    }
+  }
+
+  .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    @apply text-indigo-600 border-indigo-600 bg-white;
+  }
+
+  .p-tabview-panels {
+    @apply bg-transparent p-0 pt-4;
+  }
+
+  .p-tabview-panel {
+    @apply p-0;
+  }
+}
+
+/* Leaflet Map Fixes */
+#provider-map {
+  width: 100%;
+  height: 500px;
+  min-height: 400px;
+  z-index: 1;
+  background: #f1f5f9;
+  border-radius: 0.5rem;
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================ */
+/* FILTER BAR BASE STYLES */
+/* ============================================ */
+
+.filter-bar {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 12px;
+  padding: 0.875rem 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.filter-bar .filter-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.filter-bar .filter-label i {
+  color: #94a3b8;
+}
+
+/* PrimeNG Dropdown Customization for Filters */
+.filter-bar .p-dropdown {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  min-width: 150px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.filter-bar .p-dropdown:hover {
+  border-color: #6366f1;
+}
+
+.filter-bar .p-dropdown:focus,
+.filter-bar .p-dropdown.p-focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.filter-bar .p-dropdown .p-dropdown-label {
+  padding: 0.5rem 0.75rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.filter-bar .p-dropdown .p-dropdown-trigger {
+  width: 2.25rem;
+  color: #6366f1;
+}
+
+/* Dropdown Panel Styling */
+.p-dropdown-panel {
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.p-dropdown-panel .p-dropdown-items {
+  padding: 0.25rem;
+}
+
+.p-dropdown-panel .p-dropdown-item {
+  padding: 0.625rem 0.875rem;
+  border-radius: 6px;
+  margin: 0.125rem 0;
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
+}
+
+.p-dropdown-panel .p-dropdown-item:hover {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.p-dropdown-panel .p-dropdown-item.p-highlight {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+}
+
